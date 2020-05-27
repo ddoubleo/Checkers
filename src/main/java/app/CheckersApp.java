@@ -9,15 +9,16 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
+
 public class CheckersApp extends Application {
     public static final int TILE_SIZE = 80;
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
 
     private Group tileGroup = new Group();
-    private Group peiceGroup = new Group();
+    public static Group peiceGroup = new Group();
 
-    private Tile[][] board = new Tile[WIDTH][HEIGHT];
+    //private Tile[][] board = new Tile[WIDTH][HEIGHT];
 
     private Parent createContent() {
         Pane root = new Pane();
@@ -26,17 +27,17 @@ public class CheckersApp extends Application {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 Tile tile = new Tile((x + y) % 2 == 1, x, y);
-                board[x][y] = tile;
+                Board.board[x][y] = tile;
                 tile.setStroke(Color.BLACK);
 
                 tileGroup.getChildren().add(tile);
 
                 Piece piece = null;
                 if (y <= 2 && (x + y) % 2 != 0) {
-                    piece = makePiece(PieceType.Black, x, y);
+                    piece = new King(PieceType.Black,x,y);
                 }
                 if (y >= 5 && (x + y) % 2 != 0) {
-                    piece = makePiece(PieceType.White, x, y);
+                    piece = new King(PieceType.White,x,y);
                 }
                 if (piece != null) {
                     tile.setPiece(piece);
@@ -51,11 +52,9 @@ public class CheckersApp extends Application {
     private Piece makePiece(PieceType type, int x, int y) {
         Piece piece = new Piece(type, x, y);
 
-        piece.setOnMouseReleased(e -> {
+        /*piece.setOnMouseReleased(e -> {
             int newX = coordinateToBoard(piece.getLayoutX());
             int newY = coordinateToBoard(piece.getLayoutY());
-            //System.out.println(piece.getScene());
-            //System.out.println(piece.getScene());
             MoveResult result;
             if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT) {
                 result = new MoveResult(MovementType.NONE);
@@ -71,27 +70,26 @@ public class CheckersApp extends Application {
                     piece.abortMove();
                     break;
                 case MOVE:
-                    board[x0][y0].setPiece(null);
-                    board[newX][newY].setPiece(piece);
+                    Board.board[x0][y0].setPiece(null);
+                    Board.board[newX][newY].setPiece(piece);
                     piece.move(newX, newY);
                     break;
                 case JUMP:
                     piece.move(newX, newY);
-                    board[x0][y0].setPiece(null);
-                    board[newX][newY].setPiece(piece);
+                    Board.board[x0][y0].setPiece(null);
+                    Board.board[newX][newY].setPiece(piece);
 
                     Piece killedPiece = result.getPiece();
-                    board[coordinateToBoard(killedPiece.getOldX())][coordinateToBoard(killedPiece.getOldY())].setPiece(null);
+                    Board.board[coordinateToBoard(killedPiece.getOldX())][coordinateToBoard(killedPiece.getOldY())].setPiece(null);
                     peiceGroup.getChildren().remove(killedPiece);
                     break;
             }
         });
-
+*/
         return piece;
     }
 
-    private MoveResult tryToMove(Piece piece, int newX, int newY) {
-        //if (newX > 8 || newY > 8 || newX < 0 || newY < 0) return new MoveResult(MovementType.NONE);
+    /*private MoveResult tryToMove(Piece piece, int newX, int newY) {
         if (board[newX][newY].hasPiece() || (newX + newY) % 2 == 0) {
             return new MoveResult(MovementType.NONE);
         }
@@ -117,13 +115,10 @@ public class CheckersApp extends Application {
             }
         }
         return new MoveResult(MovementType.NONE);
-    }
+    } */
 
     private int coordinateToBoard(double pixel) {
-        //System.out.println(pixel);
-        //System.out.println((int)((pixel+TILE_SIZE*0.5) / TILE_SIZE));
         return (int) ((pixel + TILE_SIZE * 0.5) / TILE_SIZE);
-
     }
 
     @Override
