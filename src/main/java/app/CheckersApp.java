@@ -1,13 +1,18 @@
 package app;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 
 
 public class CheckersApp extends Application {
@@ -15,15 +20,15 @@ public class CheckersApp extends Application {
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
 
+
     private Group tileGroup = new Group();
-    public static Group peiceGroup = new Group();
+    public static Group pieceGroup = new Group();
 
-    //private Tile[][] board = new Tile[WIDTH][HEIGHT];
 
-    private Parent createContent() {
+    private Parent createBoard() {
         Pane root = new Pane();
         root.setPrefSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
-        root.getChildren().addAll(tileGroup, peiceGroup);
+        root.getChildren().addAll(tileGroup, pieceGroup);
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 Tile tile = new Tile((x + y) % 2 == 1, x, y);
@@ -34,101 +39,66 @@ public class CheckersApp extends Application {
 
                 Piece piece = null;
                 if (y <= 2 && (x + y) % 2 != 0) {
-                    piece = new King(PieceType.Black,x,y);
+                    piece = new Piece(PieceType.Black, x, y);
                 }
                 if (y >= 5 && (x + y) % 2 != 0) {
-                    piece = new King(PieceType.White,x,y);
+                    piece = new Piece(PieceType.White, x, y);
                 }
                 if (piece != null) {
                     tile.setPiece(piece);
-                    peiceGroup.getChildren().addAll(piece);
+                    pieceGroup.getChildren().addAll(piece);
                 }
             }
         }
-
         return root;
     }
 
-    private Piece makePiece(PieceType type, int x, int y) {
-        Piece piece = new Piece(type, x, y);
-
-        /*piece.setOnMouseReleased(e -> {
-            int newX = coordinateToBoard(piece.getLayoutX());
-            int newY = coordinateToBoard(piece.getLayoutY());
-            MoveResult result;
-            if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT) {
-                result = new MoveResult(MovementType.NONE);
-            } else {
-                result = tryToMove(piece, newX, newY);
-            }
-
-            int x0 = coordinateToBoard(piece.getOldX());
-            int y0 = coordinateToBoard(piece.getOldY());
-
-            switch (result.getType()) {
-                case NONE:
-                    piece.abortMove();
-                    break;
-                case MOVE:
-                    Board.board[x0][y0].setPiece(null);
-                    Board.board[newX][newY].setPiece(piece);
-                    piece.move(newX, newY);
-                    break;
-                case JUMP:
-                    piece.move(newX, newY);
-                    Board.board[x0][y0].setPiece(null);
-                    Board.board[newX][newY].setPiece(piece);
-
-                    Piece killedPiece = result.getPiece();
-                    Board.board[coordinateToBoard(killedPiece.getOldX())][coordinateToBoard(killedPiece.getOldY())].setPiece(null);
-                    peiceGroup.getChildren().remove(killedPiece);
-                    break;
-            }
-        });
-*/
-        return piece;
-    }
-
-    /*private MoveResult tryToMove(Piece piece, int newX, int newY) {
-        if (board[newX][newY].hasPiece() || (newX + newY) % 2 == 0) {
-            return new MoveResult(MovementType.NONE);
-        }
-        int x0 = coordinateToBoard(piece.getOldX());
-        int y0 = coordinateToBoard(piece.getOldY());
-
-        System.out.println(x0);
-        System.out.println(y0);
-        System.out.println(newX);
-        System.out.println(newY);
-
-        if (Math.abs(newX - x0) == 1 && newY - y0 == piece.getType().moveDirection) {
-            return new MoveResult(MovementType.MOVE);
-        }
-        if (Math.abs(newX - x0) == 2) {
-            System.out.println(newY-y0);
-            int x1 = x0 + (newX - x0) / 2;
-            int y1 = y0 + (newY - y0) / 2;
-
-            if (board[x1][y1].hasPiece() && board[x1][y1].getPiece().getType() != piece.getType()) {
-                return new MoveResult(MovementType.JUMP, board[x1][y1].getPiece());
-
-            }
-        }
-        return new MoveResult(MovementType.NONE);
-    } */
-
-    private int coordinateToBoard(double pixel) {
-        return (int) ((pixel + TILE_SIZE * 0.5) / TILE_SIZE);
-    }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(createContent());
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("ChEcKeRs");
-        primaryStage.setResizable(false);
+    public void start(Stage primaryStage) throws Exception { //ADD TOP MENU
+        Image bgMenuImage = new Image("mainBG.png");
+        ImageView bgMenu = new ImageView(bgMenuImage);
+
+        VBox mainMenu = new VBox(7);
+
+        Button start = new Button("Start game");
+        Button exit = new Button("Exit game");
+
+        mainMenu.setAlignment(Pos.CENTER);
+        mainMenu.getChildren().addAll(start, exit);
+        StackPane menuPane = new StackPane();
+        menuPane.getChildren().addAll(bgMenu, mainMenu);
+        Scene primaryScene = new Scene(menuPane);
+        primaryStage.setScene(primaryScene);
+
+        primaryStage.setWidth(800);
+        primaryStage.setHeight(800);
+        primaryStage.setMinWidth(300);
+        primaryStage.setMinHeight(300);
+        primaryStage.setMaxWidth(800);
+        primaryStage.setMaxHeight(800);
+        primaryStage.setTitle("Checkers");
         primaryStage.show();
+
+        exit.setOnAction(e -> {
+            Button source = (Button) e.getSource();
+            primaryStage.hide();
+        });
+
+
+        start.setOnAction(e -> {
+            Button source = (Button) e.getSource();
+            primaryStage.hide();
+
+            Stage board = new Stage();
+            Scene scene = new Scene(createBoard());
+            board.setScene(scene);
+            board.setTitle("ChEcKeRs");
+            board.setResizable(false);
+            board.show();
+        });
     }
+
 
     public static void main(String[] args) {
         launch(args);

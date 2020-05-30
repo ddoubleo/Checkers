@@ -1,5 +1,5 @@
 package app;
 
-public enum MovementType {
+public enum MoveType {
     NONE,MOVE,JUMP;
 }
