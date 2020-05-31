@@ -12,4 +12,5 @@ public class Game {
         if (MOVE.equals("White")) MOVE = "Black";
         else MOVE = "White";
     }
+
 }
