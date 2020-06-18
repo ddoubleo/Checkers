@@ -58,27 +58,20 @@ public class King extends Piece {  //Наследуется от Piece и пер
         List result = new ArrayList<Integer>();
         int[] directions = new int[]{-1, 1, -1, -1, 1, 1, 1, -1};
         /*-1,1,-1,-1,1,1,1,-1*/
-
         int x = coordinateToBoard(king.getOldX());
         int y = coordinateToBoard(king.getOldY());
-        System.out.println((x));
-        System.out.println((y));
         for (int j = 1; j < 8; j += 2) {
-
             for (int d1 = x, d2 = y; d1 < 8 && d2 < 8 && d1 > -1 && d2 > 0; d1 += directions[j - 1], d2 += directions[j]) {
-
                 if (d1 + 2 * directions[j - 1] > -1 && d1 + 2 * directions[j - 1] < 8
                         && d2 + 2 * directions[j] > -1 && d2 + 2 * directions[j] < 8) {
-                    //System.out.println("Checkpoint 1");
                     int newX = directions[j - 1];
                     int newY = directions[j];
                     if (board[d1 + newX][d2 + newY].hasPiece()) {
-                        //System.out.println("Checkpoint 2");
+
                         if (board[d1 + newX][d2 + newY].getPiece().getType() != king.getType()
                                 && !board[d1 + 2 * newX][d2 + 2 * newY].hasPiece()) {
                             result.add(d1 + 2 * newX);
                             result.add(d2 + 2 * newY);
-                            System.out.println(result);
 
                         }
 

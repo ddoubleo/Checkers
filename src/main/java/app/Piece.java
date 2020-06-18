@@ -16,7 +16,7 @@ import static java.lang.Math.floor;
 
 
 public class Piece extends StackPane {
-    public final PieceType type; //?
+    public final PieceType type;
 
 
     public PieceType getType() {
@@ -136,7 +136,7 @@ public class Piece extends StackPane {
 
             if (jumpsAvailable(MOVE) && MOVE == piece.getType().name() && board[x1][y1].hasPiece()
                     && board[x1][y1].getPiece().getType() != piece.getType() && MOVE == piece.getType().name()) {
-                //System.out.println(canJump(piece).toString());
+
 
                 return new MoveResult(MoveType.JUMP, board[x1][y1].getPiece());
 
@@ -180,14 +180,14 @@ public class Piece extends StackPane {
         for (int j = 1; j < 8; j += 2) {
             if (x + 2 * directions[j - 1] > -1 && x + 2 * directions[j - 1] < 8
                     && y + 2 * directions[j] > -1 && y + 2 * directions[j] < 8) {
-                //System.out.println("Checkpoint 1");
+
                 int newX = directions[j - 1];
                 int newY = directions[j];
                 if (board[x + newX][y + newY].hasPiece()) {
-                    //System.out.println("Checkpoint 2");
+
                     if (board[x + newX][y + newY].getPiece().getType() != piece.getType()
                             && !board[x + 2 * newX][y + 2 * newY].hasPiece()) {
-                        System.out.println(result);
+
                         result.add(x + 2 * newX);
                         result.add(y + 2 * newY);
 
